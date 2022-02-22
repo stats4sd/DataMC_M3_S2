@@ -1,0 +1,185 @@
+---
+title: "Long vs Wide Data"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    df_print: default
+runtime: shiny_prerendered
+description: >
+  Learn about the basics of reshaping your data in R
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r, echo=FALSE}
+library(tidyverse)
+```
+
+```{r, echo=FALSE}
+library(panelr)
+```
+
+```{r, echo=FALSE}
+data_wide2 <- data.frame(
+  Plot_Number = 1:10,
+  Height_1 = sample(5:20, 10, replace = T),
+  Height_2 = NA,
+  Height_3 = NA,
+  Pests_1 = sample(1:20, 10, replace=T),
+  Pests_2 = sample(1:20, 10, replace=T),
+  Pests_3 = sample(1:20, 10, replace=T)
+)
+
+for(i in 1:10){
+  data_wide2$Height_2[i] <- data_wide2$Height_1[i] + sample(1:8, 1, replace = T)
+  data_wide2$Height_3[i] <- data_wide2$Height_2[i] + sample(1:8, 1, replace = T)
+}
+
+data_wide1 <- data.frame(
+  Plot_Number = 1:10,
+  Height_1 = sample(5:20, 10, replace = T),
+  Height_2 = NA,
+  Height_3 = NA
+)
+
+for(i in 1:10){
+  data_wide1$Height_2[i] <- data_wide1$Height_1[i] + sample(1:8, 1, replace = T)
+  data_wide1$Height_3[i] <- data_wide1$Height_2[i] + sample(1:8, 1, replace = T)
+}
+```
+
+## Overview
+
+
+## Packages
+
+The first of 2 packages that will be used in this workbook is Tidyr. This package was demonstrated in the previous workbook and contains many useful functions to wrangle your data. The focus is keeping your data "tidy".
+
+More on this package can be found [here](https://tidyr.tidyverse.org/)
+
+For a quick introduction on the required functions please watch this short video
+
+![](https://www.youtube.com/watch?v=6xmsJ0y6FaU)
+
+The second package that will be used is panelr. While this has primarily been designed for use with longitudinal panel data and is used for analysis as well as data management. It contains useful functions for reshaping this sort of data between long and wide. Therefore can be useful for data at different hierarchies and from a repeat group from an ODK data collection.
+
+More on panelr can be found [here](https://panelr.jacob-long.com/)
+
+
+## Dataset
+
+For the purposes of this demonstration we are going to use 2 version of the following wide data set.
+
+```{r, echo=FALSE}
+knitr::kable(data_wide1)
+```
+
+In its first instance we just have recorded the height of a plant in each of our 10 plots. We have recorded this at 3 different time points.
+
+```{r, echo=FALSE}
+knitr::kable(data_wide2)
+```
+
+In the extended version as well as height we have the number of pests observed at the different time points.
+
+During this tutorial we will be looking at a few different ways to first convert these wide datasets to long, and then we will convert them back.
+
+## Wide to Long
+
+```{r, exercise = FALSE}
+data_long1 <- data_wide1%>%
+  pivot_longer(cols = Height_1:Height_3,
+               names_to = "Height_time",
+               values_to = "Value")
+```
+
+```{r, exercise = FALSE}
+data_long1
+```
+
+```{r, exercise = FALSE}
+data_long2 <- data_wide2%>%
+  pivot_longer(cols = Height_1:Pests_3,
+               names_to = "Time_Measure",
+               values_to = "Value")
+```
+
+```{r, exercise = FALSE}
+data_long2
+```
+
+```{r, exercise = FALSE}
+data_long3 <- data_long2%>%
+  separate(Time_Measure, into = c("Measure", "Time"), "_")%>%
+  pivot_wider(names_from = Measure, values_from = Value)
+```
+
+```{r, exercise = FALSE}
+data_long3
+```
+
+```{r, exercise = FALSE}
+data_long4 <- data_wide2%>%
+  long_panel(
+    begin = 1,
+    end = 3,
+    prefix = "_",
+    id = "Plot_Number",
+    wave = "Time",
+    label_location = "end"
+  )
+```
+
+```{r, exercise = FALSE}
+data_long4
+```
+
+## Long to wide
+
+
+```{r}
+data_wide1_new <- data_long1%>%
+  pivot_wider(id_cols = Plot_Number,
+              names_from = Height_time,
+              values_from = Value)
+```
+
+```{r}
+data_wide1_new
+```
+
+```{r}
+data_wide2_new <- data_long2%>%
+  pivot_wider(id_cols = Plot_Number,
+              names_from = Time_Measure,
+              values_from = Value)
+```
+
+```{r}
+data_wide2_new
+```
+
+```{r}
+data_wide3_new <- data_long3%>%
+  pivot_wider(id_cols = Plot_Number,
+              names_from = Time,
+              values_from = c(Height,Pests))
+```
+
+```{r}
+data_wide3_new
+```
+
+```{r}
+data_wide4_new <- widen_panel(
+  data_long4, separator = "_", ignore.attributes = TRUE
+)
+```
+
+```{r}
+data_wide4_new
+```
+
