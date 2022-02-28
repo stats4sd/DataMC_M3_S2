@@ -24,7 +24,7 @@ library(panelr)
 
 ```{r, echo=FALSE}
 data_wide2 <- data.frame(
-  Plot_Number = 1:10,
+  Plot_ID = 1:10,
   Height_1 = sample(5:20, 10, replace = T),
   Height_2 = NA,
   Height_3 = NA,
@@ -39,7 +39,7 @@ for(i in 1:10){
 }
 
 data_wide1 <- data.frame(
-  Plot_Number = 1:10,
+  Plot_ID = 1:10,
   Height_1 = sample(5:20, 10, replace = T),
   Height_2 = NA,
   Height_3 = NA
@@ -118,7 +118,7 @@ In this example we have also specified one of the many optional arguments this f
 
 Here we have used the argument `names_prefix`, this tells R if there is some sort of text at the start of the column name that you don't want to be included in the values for that new column. So in our case we only really need the number from the column name and not the "Height_" part. So we can use this argument to remove that from the text, leaving just the number.
 
-Before doing any sort of reshaping of your data it is always important to think about how many rows and how many columns should the resulting transformation contain. So in our case we had 10 rows and 4 columns, 3 of which are being pivoted into longer format. So column wise we should still have our plot_number column, and the 2 columns resulting from the pivot. One with the time of measurement and one with the value of that measurement. And we had 3 measurements for 10 observations (rows), with that set to become one measurement per row, that means we should have 30 rows (3*10). So we should have 30 rows and 3 columns when our data is in long format. 
+Before doing any sort of reshaping of your data it is always important to think about how many rows and how many columns should the resulting transformation contain. So in our case we had 10 rows and 4 columns, 3 of which are being pivoted into longer format. So column wise we should still have our Plot_ID column, and the 2 columns resulting from the pivot. One with the time of measurement and one with the value of that measurement. And we had 3 measurements for 10 observations (rows), with that set to become one measurement per row, that means we should have 30 rows (3*10). So we should have 30 rows and 3 columns when our data is in long format. 
 
 It is important to think this through as checking the numbers of rows and columns is a good step in checking your transformation has worked as intended
 
@@ -152,7 +152,7 @@ More of than not, this is probably not what you are looking for in your long dat
 
 So the question is, how can we go from the wide data to long based on time point rather than on measurement within timepoints therefore keeping height and pests to their own columns?
 
-Basically rather than 60 rows of 3 columns or 10 rows of 7 columns, what we want is 30 rows of 4 columns. 10 observations * 3 timepoints, with one column for plot_number, another for timepoint, one for height and one for pests. 
+Basically rather than 60 rows of 3 columns or 10 rows of 7 columns, what we want is 30 rows of 4 columns. 10 observations * 3 timepoints, with one column for Plot_ID, another for timepoint, one for height and one for pests. 
 
 So we sort of have a mid point point between fully wide and fully long.
 
@@ -209,7 +209,7 @@ This contains many necessary functions so i recommend looking through the help p
 *   `begin = `, this argument is used to specify what is the label for your first time period/level, so in our case our first time point is labelled as 1, so we tell R, it is 1. Note that this does not need to be a number but if your are using this argument it must be something that can be sequenced. Ideally this would be a number like 1 or a letter like "A". If your columns have not been named this way but instead with strings such as "one", you can still perform this operation but instead you would look to the `periods = ` argument. I would recommend staying simple with numbers or letters unless you have a compelling reason not to.
 *   `end = ` the same as above but specifying the final period/level. In our case 3.
 *   `prefix =`, this is the text that appears before our period indicator, so what goes directly before the number in our column names to separate it from the measurement name. In our case, it was an underscore. But it could be anything, a period (.), some text string etc. Though i would recommend using an underscore. If you have specified your column names instead as "Timepoint_Measurement", then you would instead use the `suffix =` argument
-*   `id = `, this is the name our ID variable, the variable which uniquely identified the rows in the wide data. In our case it was `Plot_Number`. We write this as a string in quotation marks.
+*   `id = `, this is the name our ID variable, the variable which uniquely identified the rows in the wide data. In our case it was `Plot_ID`. We write this as a string in quotation marks.
 *   `wave = `, this is the new name for a newly created wave variable. In other words it is the name of the new column which will define your time point, your level etc. In our case we will call it "Time", in the chickens example this was called "Bird.No".
 *   `label_location = `, this tells the function where the period label is. Was it at the beginning or the end? In our case we put it at the end.
 
@@ -221,7 +221,7 @@ data_long4 <- data_wide2%>%
     begin = 1,
     end = 3,
     prefix = "_",
-    id = "Plot_Number",
+    id = "Plot_ID",
     wave = "Time",
     label_location = "end"
   )
@@ -243,7 +243,7 @@ We have already briefly been introduced to the `pivot_wider` function, but let's
 
 In addition to the `names_from` and `values_from` arguments, we have the `id_cols` argument that you will use some of the time when pivoting to wide but not always.
 
-This argument is used to specify the columns that uniquely identify each observation. By default this will use any column in the data which is not specified in `names_from` or `values_from`. So in the previous example from the last page, when we pivoted to wide it would have taken Plot_number and Time to be the identifying variables. 
+This argument is used to specify the columns that uniquely identify each observation. By default this will use any column in the data which is not specified in `names_from` or `values_from`. So in the previous example from the last page, when we pivoted to wide it would have taken Plot_ID and Time to be the identifying variables. 
 
 With these basic examples, it is not necessary to specify this `id_cols` argument but it is recommended that you get in the habit of using this argument to avoid potential errors in more complex operations.
 
@@ -255,7 +255,7 @@ There are additional optional arguments you may wish to research through the hel
 
 ```{r}
 data_wide1_new <- data_long1%>%
-  pivot_wider(id_cols = Plot_Number,
+  pivot_wider(id_cols = Plot_ID,
               names_from = Height_time,
               values_from = Value,
               names_prefix = "Height_")
@@ -269,7 +269,7 @@ Similarly we can reshape our really long data, the one with 60 rows just using t
 
 ```{r}
 data_wide2_new <- data_long2%>%
-  pivot_wider(id_cols = Plot_Number,
+  pivot_wider(id_cols = Plot_ID,
               names_from = Time_Measure,
               values_from = Value)
 ```
@@ -284,7 +284,7 @@ Note that when we do this, the new column names will always be "the value column
 
 ```{r}
 data_wide3_new <- data_long3%>%
-  pivot_wider(id_cols = Plot_Number,
+  pivot_wider(id_cols = Plot_ID,
               names_from = Time,
               values_from = c(Height,Pests))
 ```
