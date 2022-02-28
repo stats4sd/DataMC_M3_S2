@@ -53,6 +53,21 @@ for(i in 1:10){
 
 ## Overview
 
+In this second workbook for the module on R for Data Management, we are going to be taking a closer look at how you can reshape your data.
+
+Recall that in the session we discussed the differences between your data being in long vs wide format. 
+
+In wide format, every row is a single measure and every column is a variable.
+
+In long format each row is a measure within an observation. So you have multiple rows for the same plot/household etc.
+
+It is important to think about what shape your data needs to be in prior to an analysis as different methods will lend themselves to different shapes. Arguably most basic analyses will suit a wide dataset but others such as comparisons across groups in some cases or even plotting may need a long shaped dataset.
+
+For a refresher on the differences please watch this video
+
+![](https://www.youtube.com/watch?v=m9V9MwnM3rs)
+
+In this workbook, we will look at how you can transform your data between these two formats with R
 
 ## Packages
 
@@ -89,37 +104,116 @@ During this tutorial we will be looking at a few different ways to first convert
 
 ## Wide to Long
 
+Let's start with our first dataset and try transforming this into long dataset rather than wide
+
+Tidyr supplies a very useful function for this called `pivot_longer`.
+
+There are 3 key arguments that you will need to supply to  this function.
+
+*   `cols = `, you use this argument to specify which columns you actually want to turn into long format. In our example we have selected the columns between Height_1 and Height_3. Note the use of the colon means everything from X (Height_1) to Y (Height_3), including these columns. So this will select Height_1, Height_2 and Height_3 
+*   `names_to = `, this argument is used to specify the name of the column into which those column names will be inputted. In other words, Height_1, Height_2 and Height_3 will become the values in a new column when you pivot this into a longer format. So this argument is used to give that column a name.
+*   `names_to = `, this is the same as the above but is used for the column in which the values of Height_1, Height_2 and Height_3 will be inputted.
+
+In this example we have also specified one of the many optional arguments this function can take. You can look at the help page to inspect some of these optional arguments by typing `?pivot_longer` into your R console or through this [link](https://tidyr.tidyverse.org/reference/pivot_longer.html)
+
+Here we have used the argument `names_prefix`, this tells R if there is some sort of text at the start of the column name that you don't want to be included in the values for that new column. So in our case we only really need the number from the column name and not the "Height_" part. So we can use this argument to remove that from the text, leaving just the number.
+
+Before doing any sort of reshaping of your data it is always important to think about how many rows and how many columns should the resulting transformation contain. So in our case we had 10 rows and 4 columns, 3 of which are being pivoted into longer format. So column wise we should still have our plot_number column, and the 2 columns resulting from the pivot. One with the time of measurement and one with the value of that measurement. And we had 3 measurements for 10 observations (rows), with that set to become one measurement per row, that means we should have 30 rows (3*10). So we should have 30 rows and 3 columns when our data is in long format. 
+
+It is important to think this through as checking the numbers of rows and columns is a good step in checking your transformation has worked as intended
+
 ```{r, exercise = FALSE}
 data_long1 <- data_wide1%>%
   pivot_longer(cols = Height_1:Height_3,
                names_to = "Height_time",
-               values_to = "Value")
-```
+               values_to = "Value",
+               names_prefix = "Height_")
 
-```{r, exercise = FALSE}
 data_long1
 ```
+
+Success, we have a dataset now of 30 rows and 3 columns. One row per time point within a plot.
+
+Let's move onto our more complicated example where we have 2 different measures recorded at 3 separate time points.
+
+If we do the same thing again but of course extend our column selection to Pests_3. You can see that what we end up with is certainly in long format but the length is defined by time point and measure. Therefore 2 measures * 3 time points * 10 observations means we have 60 rows. You can see how this could get quite extensive if we were to do this for more and more observations/timepoints/measures. We could get some extraordinarily long datasets.
+
 
 ```{r, exercise = FALSE}
 data_long2 <- data_wide2%>%
   pivot_longer(cols = Height_1:Pests_3,
                names_to = "Time_Measure",
                values_to = "Value")
-```
 
-```{r, exercise = FALSE}
 data_long2
 ```
 
-```{r, exercise = FALSE}
-data_long3 <- data_long2%>%
-  separate(Time_Measure, into = c("Measure", "Time"), "_")%>%
-  pivot_wider(names_from = Measure, values_from = Value)
-```
+More of than not, this is probably not what you are looking for in your long data. This is a bit of a quirk of long data in that you can often choose different options for how to lengthen your data. In this example we could choose to define our length based on the measurement, as we have done in this first example, but as our data is longitudinal we could also choose to define this on time point. In other words we have a sort of quasi-multilevel approach as we have measures within timepoints within plots. In cases such as these, it is likely that you would prefer to define your data based on time points while keeping your measurements separate.
+
+So the question is, how can we go from the wide data to long based on time point rather than on measurement within timepoints therefore keeping height and pests to their own columns?
+
+Basically rather than 60 rows of 3 columns or 10 rows of 7 columns, what we want is 30 rows of 4 columns. 10 observations * 3 timepoints, with one column for plot_number, another for timepoint, one for height and one for pests. 
+
+So we sort of have a mid point point between fully wide and fully long.
+
+Therefore perhaps rather counter-intuitively, we start with our wide data, transform into long, and then sort of back again.
+
+Basically, from the long data that we have created we now want to widen the data again as we want the measure to become new variable columns, leaving time behind to define our rows. In order to do this we first need to split the measure name and the timepoint into new variables, so that we can widen the data on the name of the measure.
+
+Here we can use separate to generate 2 new columns which will replace Time_Measure. We use "into" to provide the new column names we want, "Measure" and "Time". We then provide a separator, which tells R what text is used to distinguish between the values of measure and time. In our case all of our values are "Measure_Time" so we have separated measure from time using an underscore. We are telling R, in our first column (Measure) put everything to the left of an underscore, text to the right of an underscore, that goes into the second column (Time).
+
+If we take a look at the data now, you can see we have a Measure column containing the labels either "Height" or "Pests" and a Time column containing the numbers 1 to 3.
 
 ```{r, exercise = FALSE}
+data_long3 <- data_long2%>%
+  separate(Time_Measure, into = c("Measure", "Time"), sep =  "_")
+
 data_long3
 ```
+
+And here comes the counter intuitive part, we widen our data but keep it in a long format. Just that our length is based on time point and not measurements.
+
+As you might expect, the opposite of `pivot_longer` is `pivot_wider`.
+
+This has two mandatory arguments which are similarly the opposite of what you find for `pivot_longer`.
+
+*   `names_from = `, use this argument to tell R the column, or columns, from which to generate new column names
+*   `values_from = `, we use this argument to tell R which column, or columns, it should be getting the new cell values from.
+
+So it should be getting new column headers from Measure and should be getting the values for the new columns of "Height" and "Pests" from the Value column.
+
+```{r, exercise = FALSE}
+data_long3 <- data_long3%>%
+  pivot_wider(names_from = Measure,
+              values_from = Value)
+
+data_long3
+```
+
+The resulting is a dataset of 30 rows where time point has defined our dataset length while we have separate columns for our different measures.
+
+You can see however how this process might be a bit complex and counter-intuitive. To get a long data set you have to pivot a long dataset wider? It certainly isn't what you may have expected.
+
+Thankfully from Panelr we have another useful function we can use. Though it is a little complex in its arguments. While it was designed for use with longitudinal data, I have found it very useful when dealing with wide formatted data from repeat groups in ODK. For example, one project contained a survey conducted with many farmers, but within those farms were measurements taken for up to 6 separate chickens. This data was provided to me in wide format, one row per farm with a set of columns per chicken. So you could have a column such as "Height.Bird1", "Height.Bird2" etc., though unfortunately the column names of the raw data were not so helpfully formatted. 
+
+Now a very important point regarding this function is you absolutely need a consistent naming pattern to your columns. In our example we have one as all of our columns containing time sensitive measurements take the format "Measurement_Timepoint". There is a clear separation of the 2 pieces of information. In order for Panelr to work, you must be consistent in this same manner. This was something I had to code when working on the chickens project, where using some clever coding i was able to rename column names such that each wave ended with "P1", "P2" etc.
+
+My recommendation is that when you are dealing with naming columns for wide longitudinal/multilevel data, you make a consistent and clear indication of the variables for the different time points/sub-categories. So if it is a time point make sure every time-sensitive variable does begin with something like "W1_" or end with "_W1". Make a clear distinction between the variable and the time point. Not just because Panelr requires this formatting but also because it makes your wide data more easily readable for people using your data.
+
+As mentioned, we have done this as we have all our columns looking like "Measurement_Timepont"
+
+The function you would need is called `long_panel`
+
+This contains many necessary functions so i recommend looking through the help page [here](https://www.rdocumentation.org/packages/panelr/versions/0.7.2/topics/long_panel)
+
+*   `begin = `, this argument is used to specify what is the label for your first time period/level, so in our case our first time point is labelled as 1, so we tell R, it is 1. Note that this does not need to be a number but if your are using this argument it must be something that can be sequenced. Ideally this would be a number like 1 or a letter like "A". If your columns have not been named this way but instead with strings such as "one", you can still perform this operation but instead you would look to the `periods = ` argument. I would recommend staying simple with numbers or letters unless you have a compelling reason not to.
+*   `end = ` the same as above but specifying the final period/level. In our case 3.
+*   `prefix =`, this is the text that appears before our period indicator, so what goes directly before the number in our column names to separate it from the measurement name. In our case, it was an underscore. But it could be anything, a period (.), some text string etc. Though i would recommend using an underscore. If you have specified your column names instead as "Timepoint_Measurement", then you would instead use the `suffix =` argument
+*   `id = `, this is the name our ID variable, the variable which uniquely identified the rows in the wide data. In our case it was `Plot_Number`. We write this as a string in quotation marks.
+*   `wave = `, this is the new name for a newly created wave variable. In other words it is the name of the new column which will define your time point, your level etc. In our case we will call it "Time", in the chickens example this was called "Bird.No".
+*   `label_location = `, this tells the function where the period label is. Was it at the beginning or the end? In our case we put it at the end.
+
+There are some other arguments that are a little more technical that may be suited depending on the scale of your data.
 
 ```{r, exercise = FALSE}
 data_long4 <- data_wide2%>%
@@ -137,19 +231,41 @@ data_long4 <- data_wide2%>%
 data_long4
 ```
 
+The result is the same as what we saw using the longer set up of wide - long - wide.
+
+Note that this will create a panel_data object rather than a data frame. This is a special kind of data frame for use in Panelr analysis functions but it should work equally well with standard data analysis functions.
+
 ## Long to wide
 
+Now that we have reshaped our data from wide to long. Let's do the opposite and get it back to wide again.
+
+We have already briefly been introduced to the `pivot_wider` function, but let's look at it in a little closer detail.
+
+In addition to the `names_from` and `values_from` arguments, we have the `id_cols` argument that you will use some of the time when pivoting to wide but not always.
+
+This argument is used to specify the columns that uniquely identify each observation. By default this will use any column in the data which is not specified in `names_from` or `values_from`. So in the previous example from the last page, when we pivoted to wide it would have taken Plot_number and Time to be the identifying variables. 
+
+With these basic examples, it is not necessary to specify this `id_cols` argument but it is recommended that you get in the habit of using this argument to avoid potential errors in more complex operations.
+
+We have also used the `names_prefix` argument once again, but this time rather than telling R to remove a prefix existing already in our column names. We are using it to tell R to add this prefix on in front of our values that will be generating our new column names. 
+
+If we had left his argument out we would have got column names that just say 1, 2 and 3.
+
+There are additional optional arguments you may wish to research through the help page [here](https://tidyr.tidyverse.org/reference/pivot_wider.html)
 
 ```{r}
 data_wide1_new <- data_long1%>%
   pivot_wider(id_cols = Plot_Number,
               names_from = Height_time,
-              values_from = Value)
+              values_from = Value,
+              names_prefix = "Height_")
 ```
 
 ```{r}
 data_wide1_new
 ```
+
+Similarly we can reshape our really long data, the one with 60 rows just using the basic arguments.
 
 ```{r}
 data_wide2_new <- data_long2%>%
@@ -162,6 +278,10 @@ data_wide2_new <- data_long2%>%
 data_wide2_new
 ```
 
+Now with our other piece of long data where we had rows defined by time point rather than measure, we need to be a little bit more clever. We can actually pass multiple columns into the `values_from` argument by wrapping them in `c()`. 
+
+Note that when we do this, the new column names will always be "the value column name _ the label from the names from column". In this case it will generate those original column names of Height_1, Height_2 etc.
+
 ```{r}
 data_wide3_new <- data_long3%>%
   pivot_wider(id_cols = Plot_Number,
@@ -173,13 +293,46 @@ data_wide3_new <- data_long3%>%
 data_wide3_new
 ```
 
-```{r}
-data_wide4_new <- widen_panel(
-  data_long4, separator = "_", ignore.attributes = TRUE
-)
-```
+Finally, we will have a look at the Panelr alternative. 
+
+Again this is unsurprisingly called `widen_panel` and is thankfully far simpler than its long equivalent.
+
+We do not need to pass lots of specific arguments to the function. Instead we just need 2.
+
+*   `separator = `, this is just a character string that the function will use to separate the name of the measure and the period label/number. In our case we have decided to keep the pattern of using an underscore.
+*   `ignore.attributes = FALSE`, this is a little more complicated. This argument is used when the long data was created using `long_panel`, when it is set to TRUE it will use some of the metadata stored about the data to bypass a few steps in terms of double checking that variables do indeed vary by time/group. However, often this does not quite work as intended. You can see at the bottom of the page that when this argument is excluded (the default is TRUE), we did not get the output we wanted. We got 13 columns rather than 7. Therefore i recommend setting this argument to FALSE as then the checks will be run implicitly again and this is more reliable
+
+More information on this package can be found [here](https://www.rdocumentation.org/packages/panelr/versions/0.7.2/topics/widen_panel)
 
 ```{r}
+data_wide4_new <- data_long4%>%
+  widen_panel(
+  separator = "_",
+  ignore.attributes = TRUE
+)
+
 data_wide4_new
 ```
 
+```{r}
+data_wide5_new <- data_long4%>%
+  widen_panel(
+  separator = "_"
+)
+
+data_wide5_new
+```
+
+## External Links and Resources
+
+[Long vs Wide Video](https://www.youtube.com/watch?v=m9V9MwnM3rs)
+
+[Tidyr package details](https://tidyr.tidyverse.org/)
+
+[Panelr package details](https://panelr.jacob-long.com/)
+
+[R for Data science - Pivoting](ttps://r4ds.had.co.nz/tidy-data.html#pivoting)
+
+[Analysis factor - Wide vs Long data](https://www.theanalysisfactor.com/wide-and-long-data/)
+
+[Statology - Long vs wide data](https://www.statology.org/long-vs-wide-data/)
