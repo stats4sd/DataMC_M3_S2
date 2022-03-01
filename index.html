@@ -122,7 +122,7 @@ $(document).ready(function () {
 <p>Recall that in the session we discussed the differences between your data being in long vs wide format.</p>
 <p>In wide format, every row is a single measure and every column is a variable.</p>
 <p>In long format each row is a measure within an observation. So you have multiple rows for the same plot/household etc.</p>
-<p>It is important to think about what shape your data needs to be in prior to an analysis as different methods will lend themselves to different shapes. Arguably most basic analyses will suit a wide dataset but others such as comaprisons across groups in some cases or even plotting may need a long shaped dataset.</p>
+<p>It is important to think about what shape your data needs to be in prior to an analysis as different methods will lend themselves to different shapes. Arguably most basic analyses will suit a wide dataset but others such as comparisons across groups in some cases or even plotting may need a long shaped dataset.</p>
 <p>For a refresher on the differences please watch this video</p>
 <p><img src="https://www.youtube.com/watch?v=m9V9MwnM3rs" /></p>
 <p>In this workbook, we will look at how you can transform your data between these two formats with R</p>
@@ -142,7 +142,7 @@ $(document).ready(function () {
 <table>
 <thead>
 <tr class="header">
-<th align="right">Plot_Number</th>
+<th align="right">Plot_ID</th>
 <th align="right">Height_1</th>
 <th align="right">Height_2</th>
 <th align="right">Height_3</th>
@@ -151,63 +151,63 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">14</td>
-<td align="right">16</td>
-<td align="right">19</td>
+<td align="right">18</td>
+<td align="right">21</td>
+<td align="right">25</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="right">14</td>
-<td align="right">19</td>
-<td align="right">26</td>
+<td align="right">18</td>
+<td align="right">25</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="right">17</td>
-<td align="right">23</td>
-<td align="right">29</td>
+<td align="right">15</td>
+<td align="right">19</td>
+<td align="right">26</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="right">6</td>
-<td align="right">10</td>
-<td align="right">18</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="right">11</td>
-<td align="right">17</td>
-<td align="right">23</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="right">13</td>
-<td align="right">17</td>
-<td align="right">25</td>
-</tr>
-<tr class="odd">
-<td align="right">7</td>
-<td align="right">12</td>
-<td align="right">13</td>
-<td align="right">17</td>
-</tr>
-<tr class="even">
-<td align="right">8</td>
-<td align="right">9</td>
-<td align="right">10</td>
-<td align="right">17</td>
-</tr>
-<tr class="odd">
-<td align="right">9</td>
-<td align="right">5</td>
 <td align="right">12</td>
 <td align="right">15</td>
 </tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">19</td>
+<td align="right">24</td>
+<td align="right">28</td>
+</tr>
 <tr class="even">
+<td align="right">6</td>
+<td align="right">6</td>
 <td align="right">10</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
 <td align="right">10</td>
+<td align="right">13</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
 <td align="right">14</td>
 <td align="right">22</td>
+<td align="right">27</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">16</td>
+<td align="right">20</td>
+<td align="right">23</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="right">9</td>
+<td align="right">14</td>
+<td align="right">19</td>
 </tr>
 </tbody>
 </table>
@@ -215,7 +215,7 @@ $(document).ready(function () {
 <table>
 <thead>
 <tr class="header">
-<th align="right">Plot_Number</th>
+<th align="right">Plot_ID</th>
 <th align="right">Height_1</th>
 <th align="right">Height_2</th>
 <th align="right">Height_3</th>
@@ -227,93 +227,93 @@ $(document).ready(function () {
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
+<td align="right">11</td>
+<td align="right">18</td>
 <td align="right">20</td>
-<td align="right">21</td>
-<td align="right">22</td>
-<td align="right">11</td>
-<td align="right">17</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="right">5</td>
-<td align="right">10</td>
-<td align="right">15</td>
-<td align="right">4</td>
+<td align="right">8</td>
 <td align="right">16</td>
-<td align="right">15</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="right">5</td>
-<td align="right">9</td>
-<td align="right">17</td>
-<td align="right">6</td>
-<td align="right">12</td>
-<td align="right">9</td>
+<td align="right">11</td>
 </tr>
 <tr class="even">
-<td align="right">4</td>
-<td align="right">10</td>
-<td align="right">11</td>
-<td align="right">16</td>
-<td align="right">12</td>
-<td align="right">7</td>
 <td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="right">13</td>
-<td align="right">15</td>
-<td align="right">21</td>
-<td align="right">13</td>
-<td align="right">11</td>
-<td align="right">9</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="right">10</td>
-<td align="right">18</td>
-<td align="right">25</td>
-<td align="right">2</td>
-<td align="right">7</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="right">7</td>
-<td align="right">18</td>
-<td align="right">25</td>
+<td align="right">14</td>
+<td align="right">20</td>
 <td align="right">27</td>
-<td align="right">9</td>
-<td align="right">11</td>
+<td align="right">4</td>
+<td align="right">12</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
 <td align="right">3</td>
+<td align="right">9</td>
+<td align="right">10</td>
+<td align="right">14</td>
+<td align="right">8</td>
+<td align="right">19</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">8</td>
+<td align="right">14</td>
+<td align="right">22</td>
+<td align="right">6</td>
+<td align="right">16</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">18</td>
+<td align="right">21</td>
+<td align="right">25</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">12</td>
+<td align="right">19</td>
+<td align="right">9</td>
+<td align="right">12</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="right">18</td>
+<td align="right">23</td>
+<td align="right">25</td>
+<td align="right">2</td>
+<td align="right">11</td>
+<td align="right">17</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="right">12</td>
-<td align="right">15</td>
-<td align="right">17</td>
-<td align="right">9</td>
-<td align="right">1</td>
+<td align="right">14</td>
+<td align="right">20</td>
+<td align="right">23</td>
 <td align="right">2</td>
+<td align="right">8</td>
+<td align="right">6</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="right">10</td>
-<td align="right">18</td>
-<td align="right">26</td>
+<td align="right">6</td>
+<td align="right">9</td>
 <td align="right">14</td>
-<td align="right">8</td>
-<td align="right">18</td>
+<td align="right">9</td>
+<td align="right">7</td>
+<td align="right">6</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="right">14</td>
-<td align="right">15</td>
-<td align="right">23</td>
-<td align="right">20</td>
-<td align="right">14</td>
+<td align="right">8</td>
 <td align="right">12</td>
+<td align="right">18</td>
+<td align="right">13</td>
+<td align="right">10</td>
+<td align="right">14</td>
 </tr>
 </tbody>
 </table>
@@ -332,7 +332,7 @@ $(document).ready(function () {
 </ul>
 <p>In this example we have also specified one of the many optional arguments this function can take. You can look at the help page to inspect some of these optional arguments by typing <code>?pivot_longer</code> into your R console or through this <a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">link</a></p>
 <p>Here we have used the argument <code>names_prefix</code>, this tells R if there is some sort of text at the start of the column name that you don’t want to be included in the values for that new column. So in our case we only really need the number from the column name and not the “Height_” part. So we can use this argument to remove that from the text, leaving just the number.</p>
-<p>Before doing any sort of reshaping of your data it is always important to think about how many rows and how many columns should the resulting transformation contain. So in our case we had 10 rows and 4 columns, 3 of which are being pivoted into longer format. So column wise we should still have our plot_number column, and the 2 columns resulting from the pivot. One with the time of measurement and one with the value of that measurement. And we had 3 measurements for 10 observations (rows), with that set to become one measurement per row, that means we should have 30 rows (3*10). So we should have 30 rows and 3 columns when our data is in long format.</p>
+<p>Before doing any sort of reshaping of your data it is always important to think about how many rows and how many columns should the resulting transformation contain. So in our case we had 10 rows and 4 columns, 3 of which are being pivoted into longer format. So column wise we should still have our Plot_ID column, and the 2 columns resulting from the pivot. One with the time of measurement and one with the value of that measurement. And we had 3 measurements for 10 observations (rows), with that set to become one measurement per row, that means we should have 30 rows (3*10). So we should have 30 rows and 3 columns when our data is in long format.</p>
 <p>It is important to think this through as checking the numbers of rows and columns is a good step in checking your transformation has worked as intended</p>
 <pre class="r"><code>data_long1 &lt;- data_wide1%&gt;%
   pivot_longer(cols = Height_1:Height_3,
@@ -342,22 +342,22 @@ $(document).ready(function () {
 
 data_long1</code></pre>
 <pre><code>## # A tibble: 30 x 3
-##    Plot_Number Height_time Value
-##          &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
-##  1           1 1              14
-##  2           1 2              16
-##  3           1 3              19
-##  4           2 1              14
-##  5           2 2              19
-##  6           2 3              26
-##  7           3 1              17
-##  8           3 2              23
-##  9           3 3              29
-## 10           4 1               6
+##    Plot_ID Height_time Value
+##      &lt;int&gt; &lt;chr&gt;       &lt;int&gt;
+##  1       1 1              18
+##  2       1 2              21
+##  3       1 3              25
+##  4       2 1              14
+##  5       2 2              18
+##  6       2 3              25
+##  7       3 1              15
+##  8       3 2              19
+##  9       3 3              26
+## 10       4 1               6
 ## # ... with 20 more rows</code></pre>
-<p>Sucess, we have a datset now of 30 rows and 3 columns. One row per time point within a plot.</p>
-<p>Let’s move onto our more complicated example where we have 2 different measures recorded at 3 seprate time points.</p>
-<p>If we do the same thing again but of course extend our column selction to Pests_3. You can see that what we end up with is cerainly in long format but the length is defined by time point and measure. Therefore 2 measures * 3 time points * 10 observations means we have 60 rows. You can see how this could get quite extensive if we were to do this for more and more observations/timepoints/measures. We could get some extraordinarily long datasets.</p>
+<p>Success, we have a dataset now of 30 rows and 3 columns. One row per time point within a plot.</p>
+<p>Let’s move onto our more complicated example where we have 2 different measures recorded at 3 separate time points.</p>
+<p>If we do the same thing again but of course extend our column selection to Pests_3. You can see that what we end up with is certainly in long format but the length is defined by time point and measure. Therefore 2 measures * 3 time points * 10 observations means we have 60 rows. You can see how this could get quite extensive if we were to do this for more and more observations/timepoints/measures. We could get some extraordinarily long datasets.</p>
 <pre class="r"><code>data_long2 &lt;- data_wide2%&gt;%
   pivot_longer(cols = Height_1:Pests_3,
                names_to = &quot;Time_Measure&quot;,
@@ -365,114 +365,90 @@ data_long1</code></pre>
 
 data_long2</code></pre>
 <pre><code>## # A tibble: 60 x 3
-##    Plot_Number Time_Measure Value
-##          &lt;int&gt; &lt;chr&gt;        &lt;int&gt;
-##  1           1 Height_1        20
-##  2           1 Height_2        21
-##  3           1 Height_3        22
-##  4           1 Pests_1         11
-##  5           1 Pests_2         17
-##  6           1 Pests_3          2
-##  7           2 Height_1         5
-##  8           2 Height_2        10
-##  9           2 Height_3        15
-## 10           2 Pests_1          4
+##    Plot_ID Time_Measure Value
+##      &lt;int&gt; &lt;chr&gt;        &lt;int&gt;
+##  1       1 Height_1        11
+##  2       1 Height_2        18
+##  3       1 Height_3        20
+##  4       1 Pests_1          8
+##  5       1 Pests_2         16
+##  6       1 Pests_3         11
+##  7       2 Height_1        14
+##  8       2 Height_2        20
+##  9       2 Height_3        27
+## 10       2 Pests_1          4
 ## # ... with 50 more rows</code></pre>
-<p>More of than not, this is probably not what you are looking for in your long data. This is a bit of a quirk of long data in that you can often choose different options for how to lengthen your data. In this example we could choose to define our length based on the measurement, as we have done in this first example, but as our data is lonfitudinal we could also choose to define this on time point. In other words we have a sort of quasi-multilevel approach as we have measures within timepoints within plots. In cases such as these, it is likley that you would prefer to define your data based on time points while keeping your measurements separate.</p>
+<p>More of than not, this is probably not what you are looking for in your long data. This is a bit of a quirk of long data in that you can often choose different options for how to lengthen your data. In this example we could choose to define our length based on the measurement, as we have done in this first example, but as our data is longitudinal we could also choose to define this on time point. In other words we have a sort of quasi-multilevel approach as we have measures within timepoints within plots. In cases such as these, it is likely that you would prefer to define your data based on time points while keeping your measurements separate.</p>
 <p>So the question is, how can we go from the wide data to long based on time point rather than on measurement within timepoints therefore keeping height and pests to their own columns?</p>
-<p>Basically rather than 60 rows of 3 columns or 10 rows of 7 columns, what we want is 30 rows of 4 columns. 10 observations * 3 timepoints, with one column for plot_number, another for timepoint, one for height and one for pests.</p>
+<p>Basically rather than 60 rows of 3 columns or 10 rows of 7 columns, what we want is 30 rows of 4 columns. 10 observations * 3 timepoints, with one column for Plot_ID, another for timepoint, one for height and one for pests.</p>
 <p>So we sort of have a mid point point between fully wide and fully long.</p>
-<p>Therefore perhaps rather counter-intuitively, we start with our wide data, transform into long, and then sort of back again.</p>
-<p>Basically, from the long data that we have created we now want to widen the data again as we want the measure to become new variable columns, leaving time behind to define our rows. In order to do this we first need to split the measure name and the timepoint into new variables, so that we can widen the data on the name of the measure.</p>
-<p>Here we can use seprate to generate 2 new columns which will replace Time_Measure. We use “into” to provide the new column names we want, “Measure” and “Time”. We then provide a seperator, which tells R what text is used to distinguish between the values of measure and time. In our case all of our values are “Measure_Time” so we have serpated measure from time using an underscore. We are telling R, in our first column (Measure) put everything to the left of an underscore, text to the right of an underscore, that goes into the second column (Time).</p>
-<p>If we take a look at the data now, you can see we have a Measure column cotanining the labels either “Height” or “Pests” and a Time column containging the numbers 1 to 3.</p>
-<pre class="r"><code>data_long3 &lt;- data_long2%&gt;%
-  separate(Time_Measure, into = c(&quot;Measure&quot;, &quot;Time&quot;), sep =  &quot;_&quot;)
-
-data_long3</code></pre>
-<pre><code>## # A tibble: 60 x 4
-##    Plot_Number Measure Time  Value
-##          &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;int&gt;
-##  1           1 Height  1        20
-##  2           1 Height  2        21
-##  3           1 Height  3        22
-##  4           1 Pests   1        11
-##  5           1 Pests   2        17
-##  6           1 Pests   3         2
-##  7           2 Height  1         5
-##  8           2 Height  2        10
-##  9           2 Height  3        15
-## 10           2 Pests   1         4
-## # ... with 50 more rows</code></pre>
-<p>And here comes the counter intuitive part, we widen our data but keep it in a long format. Just that our length is based on time point and not measurements.</p>
-<p>As you might expect, the opposite of <code>pivot_longer</code> is <code>pivot_wider</code>.</p>
-<p>This has two mandatory arguments which are similarly the opposite of what you find for <code>pivot_longer</code>.</p>
-<ul>
-<li><code>names_from =</code>, use this argument to tell R the column, or columns, from which to generate new column names</li>
-<li><code>values_from =</code>, we use this argument to tell R which column, or columns, it should be getting the new cell values from.</li>
-</ul>
-<p>So it should be getting new column headers from Measure and should be getting the values for the new columns of “Height” and “Pests” from the Value column.</p>
-<pre class="r"><code>data_long3 &lt;- data_long3%&gt;%
-  pivot_wider(names_from = Measure,
-              values_from = Value)
+<p>Thankfully we can create new columns for each type of measure using pivot_longer. Though it means ensuring that you have a consistent naming system.This is because we need to specify some sort of separator or naming pattern so that R can distinguish cleanly between two pieces of information in our column headers.</p>
+<p>Now a very important point to reiterate regarding this function is you absolutely need a consistent naming pattern to your columns. In our example we have one as all of our columns containing time sensitive measurements take the format “Measurement_Timepoint”. There is a clear separation of the 2 pieces of information. In order for Panelr to work, you must be consistent in this same manner.</p>
+<p>My recommendation is that when you are dealing with naming columns for wide longitudinal/multilevel data, you make a consistent and clear indication of the variables for the different time points/sub-categories. So if it is a time point make sure every time-sensitive variable does begin with something like “W1_” or end with "_W1". Make a clear distinction between the variable and the time point.</p>
+<p>We have done this as we have all our columns looking like “Measurement_Timepont”</p>
+<p>Now in order to make sure we get separate columns for height and pests we actually need to start supplying our <code>names_to</code> and <code>values_to</code> arguments.</p>
+<p>We keep <code>cols</code> the same, but in <code>names_to</code> we need to do something a little special. You need to include the “.value” string as one of your arguments. In our case we specify this first as in our column names the measure comes first in the naming system. “.value” tells R that part of the column name specifies a measurement and that these should take their own new columns rather than being spliced into one long column. In other words it will see that we have “Height_” and “Pests_” and recognise that these should be separate columns in your output.</p>
+<p>We also have to tell R what it is that separates these pieces of information in the column names, in our case it is an underscore. So we supply that in quotations to the <code>names_sep</code> argument.</p>
+<p>Note that we do not need to specify the <code>values_to</code> argument as R will name these columns based upon the existing column names. Though we can add it in if we want them to be called something different.</p>
+<pre class="r"><code>data_long3 &lt;- data_wide2%&gt;%
+  pivot_longer(cols = Height_1:Pests_3,
+               names_to = c(&quot;.value&quot;, &quot;Time&quot;),
+               names_sep = &quot;_&quot;)
 
 data_long3</code></pre>
 <pre><code>## # A tibble: 30 x 4
-##    Plot_Number Time  Height Pests
-##          &lt;int&gt; &lt;chr&gt;  &lt;int&gt; &lt;int&gt;
-##  1           1 1         20    11
-##  2           1 2         21    17
-##  3           1 3         22     2
-##  4           2 1          5     4
-##  5           2 2         10    16
-##  6           2 3         15    15
-##  7           3 1          5     6
-##  8           3 2          9    12
-##  9           3 3         17     9
-## 10           4 1         10    12
+##    Plot_ID Time  Height Pests
+##      &lt;int&gt; &lt;chr&gt;  &lt;int&gt; &lt;int&gt;
+##  1       1 1         11     8
+##  2       1 2         18    16
+##  3       1 3         20    11
+##  4       2 1         14     4
+##  5       2 2         20    12
+##  6       2 3         27     4
+##  7       3 1          9     8
+##  8       3 2         10    19
+##  9       3 3         14     6
+## 10       4 1          8     6
 ## # ... with 20 more rows</code></pre>
 <p>The resulting is a dataset of 30 rows where time point has defined our dataset length while we have separate columns for our different measures.</p>
-<p>You can see however how this process might be a bit complex and counter-intuitive. To get a long data set you have to pivot a long dataset wider? It certainly isn’t what you may have expected.</p>
-<p>Thankfully from Panelr we have another useful function we can use. Though it is a little complex in its arguments. While it was designed for use with longitudinal data, I have found it very useful when dealing with wide formatted data from repeat groups in ODK. For example, one project contained a survey conducted with many farmers, but within those farms were measurements taken for up to 6 separate chickens. This data was provided to me in wide format, one row per farm with a set of coulmns per chicken. So you could have a column such as “Height.Bird1”, “Height.Bird2” etc., though unfortunately the column names of the raw data were not so helpfully formatted.</p>
-<p>Now a very important point regarding this function is you absolutely need a consistent naming pattern to your columns. In our example we have one as all of our columns containing time sensitive measurements take the format “Measurement_Timepoint”. There is a clear sepration of the 2 pieces of information. In order for Panelr to work, you must be consistent in this same manner. This was something I had to code when working on the chickens project, where using some clever coding i was able to rename column names such that each wave ended with “P1”, “P2” etc.</p>
-<p>My recommendation is that when you are dealing with naming columns for wide longitudinal/multilevel data, you make a consitent and clear indication of the variables for the different time points/sub-categories. So if it is a time point make sure every time-sensitive variable does begin with something like “W1_” or end with "_W1". Make a clear distinction between the variable and the time point. Not just because Panelr requires this formatting but also because it makes your wide data more easily readable for people using your data.</p>
-<p>As mentioned, we have done this as we have all our columns looking like “Measurement_Timepont”</p>
+<p>From Panelr we have another useful function we can use. Though it is a little complex in its arguments. While it was designed for use with longitudinal data, I have found it very useful when dealing with wide formatted data from repeat groups in ODK. For example, one project contained a survey conducted with many farmers, but within those farms were measurements taken for up to 6 separate chickens. This data was provided to me in wide format, one row per farm with a set of columns per chicken. So you could have a column such as “Height.Bird1”, “Height.Bird2” etc., though unfortunately the column names of the raw data were not so helpfully formatted.</p>
+<p>As with <code>pivot_longer</code> a consistent naming pattern is even more crucial as we need to be very specific when writing the code.</p>
 <p>The function you would need is called <code>long_panel</code></p>
 <p>This contains many necessary functions so i recommend looking through the help page <a href="https://www.rdocumentation.org/packages/panelr/versions/0.7.2/topics/long_panel">here</a></p>
 <ul>
-<li><code>begin =</code>, this argument is used to specify what is the label for your first time period/level, so in our case our first time point is labelled as 1, so we tell R, it is 1. Note that this does not need to be a number but if your are using this argument it must be something that can be sequenced. Ideally this would be a number like 1 or a letter like “A”. If your columns have not been named this way but instead with strings such as “one”, you can still perform this operation but instead you would look to the <code>periods =</code> argument. I would recommend staying simple with numbers or letters unless you have a comepelling reason not to.</li>
-<li><code>end =</code> the same as above but sepcifying the final period/level. In our case 3.</li>
-<li><code>prefix =</code>, this is the text that appears before our period indicator, so what goes directly before the number in our column names to seperate it from the measurement name. In our case, it was an underscore. But it could be anything, a period (.), some text string etc. Though i would recommend using an underscore. If you have specified your column names intead as “Timepoint_Measurement”, then you would instead use the <code>suffix =</code> argument</li>
-<li><code>id =</code>, this is the name our ID variable, the variable which uniquely identified the rows in the wide data. In our case it was <code>Plot_Number</code>. We write this as a string in quotation marks.</li>
+<li><code>begin =</code>, this argument is used to specify what is the label for your first time period/level, so in our case our first time point is labelled as 1, so we tell R, it is 1. Note that this does not need to be a number but if your are using this argument it must be something that can be sequenced. Ideally this would be a number like 1 or a letter like “A”. If your columns have not been named this way but instead with strings such as “one”, you can still perform this operation but instead you would look to the <code>periods =</code> argument. I would recommend staying simple with numbers or letters unless you have a compelling reason not to.</li>
+<li><code>end =</code> the same as above but specifying the final period/level. In our case 3.</li>
+<li><code>prefix =</code>, this is the text that appears before our period indicator, so what goes directly before the number in our column names to separate it from the measurement name. In our case, it was an underscore. But it could be anything, a period (.), some text string etc. Though i would recommend using an underscore. If you have specified your column names instead as “Timepoint_Measurement”, then you would instead use the <code>suffix =</code> argument</li>
+<li><code>id =</code>, this is the name our ID variable, the variable which uniquely identified the rows in the wide data. In our case it was <code>Plot_ID</code>. We write this as a string in quotation marks.</li>
 <li><code>wave =</code>, this is the new name for a newly created wave variable. In other words it is the name of the new column which will define your time point, your level etc. In our case we will call it “Time”, in the chickens example this was called “Bird.No”.</li>
 <li><code>label_location =</code>, this tells the function where the period label is. Was it at the beginning or the end? In our case we put it at the end.</li>
 </ul>
-<p>There are some other arguments that are a little more techincal that may be suited depending on the scale of your data.</p>
+<p>There are some other arguments that are a little more technical that may be suited depending on the scale of your data.</p>
 <pre class="r"><code>data_long4 &lt;- data_wide2%&gt;%
   long_panel(
     begin = 1,
     end = 3,
     prefix = &quot;_&quot;,
-    id = &quot;Plot_Number&quot;,
+    id = &quot;Plot_ID&quot;,
     wave = &quot;Time&quot;,
     label_location = &quot;end&quot;
   )</code></pre>
 <pre class="r"><code>data_long4</code></pre>
 <pre><code>## # Panel data:    30 x 4
-## # entities:      Plot_Number [10]
+## # entities:      Plot_ID [10]
 ## # wave variable: Time [1, 2, 3 (3 waves)]
-##    Plot_Number  Time Height Pests
-##    &lt;fct&gt;       &lt;dbl&gt;  &lt;int&gt; &lt;int&gt;
-##  1 1               1     20    11
-##  2 1               2     21    17
-##  3 1               3     22     2
-##  4 2               1      5     4
-##  5 2               2     10    16
-##  6 2               3     15    15
-##  7 3               1      5     6
-##  8 3               2      9    12
-##  9 3               3     17     9
-## 10 4               1     10    12
+##    Plot_ID  Time Height Pests
+##    &lt;fct&gt;   &lt;dbl&gt;  &lt;int&gt; &lt;int&gt;
+##  1 1           1     11     8
+##  2 1           2     18    16
+##  3 1           3     20    11
+##  4 2           1     14     4
+##  5 2           2     20    12
+##  6 2           3     27     4
+##  7 3           1      9     8
+##  8 3           2     10    19
+##  9 3           3     14     6
+## 10 4           1      8     6
 ## # ... with 20 more rows</code></pre>
 <p>The result is the same as what we saw using the longer set up of wide - long - wide.</p>
 <p>Note that this will create a panel_data object rather than a data frame. This is a special kind of data frame for use in Panelr analysis functions but it should work equally well with standard data analysis functions.</p>
@@ -480,79 +456,85 @@ data_long3</code></pre>
 <div id="section-long-to-wide" class="section level2">
 <h2>Long to wide</h2>
 <p>Now that we have reshaped our data from wide to long. Let’s do the opposite and get it back to wide again.</p>
-<p>We have already briefly been introduced to the <code>pivot_wider</code> function, but let’s look at it in a little closer detail.</p>
-<p>In addition to the <code>names_from</code> and <code>values_from</code> arguments, we have the <code>id_cols</code> argument that you will use some of the time when pivoting to wide but not always.</p>
-<p>This argument is used to specify the columns that uniquely identify each observation. By default this will use any column in the data which is not specified in <code>names_from</code> or <code>values_from</code>. So in the previous example from the last page, when we pivoted to wide it would have taken Plot_number and Time to be the identifying variables.</p>
-<p>With these basic examples, it is not necessary to specify this <code>id_cols</code> argument but it is recommended that you get in the habit of using this argument to avoid potential errors in more complex operations.</p>
-<p>We have also used the <code>names_prefix</code> argument once again, but this time rather than telling R to remove a prefix existing already in our column names. We are using it to tell R to add this prefix on in front of our values that will be generating our new column names.</p>
-<p>If we had left his argument out we would have got column names that just say 1, 2 and 3.</p>
-<p>There are additioanl optional arguments you may wish to research through the helpage <a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">here</a></p>
+<p>As you might expect, the opposite of <code>pivot_longer</code> is <code>pivot_wider</code>.</p>
+<p>This has two mandatory arguments which are similarly the opposite of what you find for <code>pivot_longer</code>.</p>
+<ul>
+<li><code>names_from =</code>, use this argument to tell R the column, or columns, from which to generate new column names</li>
+<li><code>values_from =</code>, we use this argument to tell R which column, or columns, it should be getting the new cell values from.</li>
+</ul>
+<p>We also have a couple optional arguments</p>
+<ul>
+<li><code>id_cols =</code>, This argument is used to specify the columns that uniquely identify each observation. By default this will use any column in the data which is not specified in <code>names_from</code> or <code>values_from</code>. So in the previous example from the last page, when we pivoted to wide it would have taken Plot_ID and Time to be the identifying variables.</li>
+<li><code>names_prefix</code> we use this once again, but this time rather than telling R to remove a prefix existing already in our column names. We are using it to tell R to add this prefix on in front of our values that will be generating our new column names. If we had left his argument out we would have got column names that just say 1, 2 and 3.</li>
+</ul>
+<p>There are additional optional arguments you may wish to research through the help page <a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">here</a></p>
 <pre class="r"><code>data_wide1_new &lt;- data_long1%&gt;%
-  pivot_wider(id_cols = Plot_Number,
+  pivot_wider(id_cols = Plot_ID,
               names_from = Height_time,
               values_from = Value,
               names_prefix = &quot;Height_&quot;)</code></pre>
 <pre class="r"><code>data_wide1_new</code></pre>
 <pre><code>## # A tibble: 10 x 4
-##    Plot_Number Height_1 Height_2 Height_3
-##          &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;
-##  1           1       14       16       19
-##  2           2       14       19       26
-##  3           3       17       23       29
-##  4           4        6       10       18
-##  5           5       11       17       23
-##  6           6       13       17       25
-##  7           7       12       13       17
-##  8           8        9       10       17
-##  9           9        5       12       15
-## 10          10       10       14       22</code></pre>
+##    Plot_ID Height_1 Height_2 Height_3
+##      &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;
+##  1       1       18       21       25
+##  2       2       14       18       25
+##  3       3       15       19       26
+##  4       4        6       12       15
+##  5       5       19       24       28
+##  6       6        6       10       12
+##  7       7       10       13       19
+##  8       8       14       22       27
+##  9       9       16       20       23
+## 10      10        9       14       19</code></pre>
 <p>Similarly we can reshape our really long data, the one with 60 rows just using the basic arguments.</p>
 <pre class="r"><code>data_wide2_new &lt;- data_long2%&gt;%
-  pivot_wider(id_cols = Plot_Number,
+  pivot_wider(id_cols = Plot_ID,
               names_from = Time_Measure,
               values_from = Value)</code></pre>
 <pre class="r"><code>data_wide2_new</code></pre>
 <pre><code>## # A tibble: 10 x 7
-##    Plot_Number Height_1 Height_2 Height_3 Pests_1 Pests_2 Pests_3
-##          &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
-##  1           1       20       21       22      11      17       2
-##  2           2        5       10       15       4      16      15
-##  3           3        5        9       17       6      12       9
-##  4           4       10       11       16      12       7       2
-##  5           5       13       15       21      13      11       9
-##  6           6       10       18       25       2       7       7
-##  7           7       18       25       27       9      11       3
-##  8           8       12       15       17       9       1       2
-##  9           9       10       18       26      14       8      18
-## 10          10       14       15       23      20      14      12</code></pre>
+##    Plot_ID Height_1 Height_2 Height_3 Pests_1 Pests_2 Pests_3
+##      &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
+##  1       1       11       18       20       8      16      11
+##  2       2       14       20       27       4      12       4
+##  3       3        9       10       14       8      19       6
+##  4       4        8       14       22       6      16       7
+##  5       5       18       21       25       1       3      16
+##  6       6        6       12       19       9      12      10
+##  7       7       18       23       25       2      11      17
+##  8       8       14       20       23       2       8       6
+##  9       9        6        9       14       9       7       6
+## 10      10        8       12       18      13      10      14</code></pre>
 <p>Now with our other piece of long data where we had rows defined by time point rather than measure, we need to be a little bit more clever. We can actually pass multiple columns into the <code>values_from</code> argument by wrapping them in <code>c()</code>.</p>
 <p>Note that when we do this, the new column names will always be “the value column name _ the label from the names from column”. In this case it will generate those original column names of Height_1, Height_2 etc.</p>
 <pre class="r"><code>data_wide3_new &lt;- data_long3%&gt;%
-  pivot_wider(id_cols = Plot_Number,
+  pivot_wider(id_cols = Plot_ID,
               names_from = Time,
               values_from = c(Height,Pests))</code></pre>
 <pre class="r"><code>data_wide3_new</code></pre>
 <pre><code>## # A tibble: 10 x 7
-##    Plot_Number Height_1 Height_2 Height_3 Pests_1 Pests_2 Pests_3
-##          &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
-##  1           1       20       21       22      11      17       2
-##  2           2        5       10       15       4      16      15
-##  3           3        5        9       17       6      12       9
-##  4           4       10       11       16      12       7       2
-##  5           5       13       15       21      13      11       9
-##  6           6       10       18       25       2       7       7
-##  7           7       18       25       27       9      11       3
-##  8           8       12       15       17       9       1       2
-##  9           9       10       18       26      14       8      18
-## 10          10       14       15       23      20      14      12</code></pre>
+##    Plot_ID Height_1 Height_2 Height_3 Pests_1 Pests_2 Pests_3
+##      &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;
+##  1       1       11       18       20       8      16      11
+##  2       2       14       20       27       4      12       4
+##  3       3        9       10       14       8      19       6
+##  4       4        8       14       22       6      16       7
+##  5       5       18       21       25       1       3      16
+##  6       6        6       12       19       9      12      10
+##  7       7       18       23       25       2      11      17
+##  8       8       14       20       23       2       8       6
+##  9       9        6        9       14       9       7       6
+## 10      10        8       12       18      13      10      14</code></pre>
+<p>For more detailed and complicated examples of using the pivot functions, please follow this <a href="https://tidyr.tidyverse.org/articles/pivot.html">link</a></p>
 <p>Finally, we will have a look at the Panelr alternative.</p>
 <p>Again this is unsurprisingly called <code>widen_panel</code> and is thankfully far simpler than its long equivalent.</p>
-<p>We do not need to pass lots of specific arguments to the funciton. Instead we just need 2.</p>
+<p>We do not need to pass lots of specific arguments to the function. Instead we just need 2.</p>
 <ul>
-<li><code>separator =</code>, this is just a character string that the funciton will use to seperate the name of the measure and the period label/number. In our case we have decided to keep the pattern of using an underscore.</li>
+<li><code>separator =</code>, this is just a character string that the function will use to separate the name of the measure and the period label/number. In our case we have decided to keep the pattern of using an underscore.</li>
 <li><code>ignore.attributes = FALSE</code>, this is a little more complicated. This argument is used when the long data was created using <code>long_panel</code>, when it is set to TRUE it will use some of the metadata stored about the data to bypass a few steps in terms of double checking that variables do indeed vary by time/group. However, often this does not quite work as intended. You can see at the bottom of the page that when this argument is excluded (the default is TRUE), we did not get the output we wanted. We got 13 columns rather than 7. Therefore i recommend setting this argument to FALSE as then the checks will be run implicitly again and this is more reliable</li>
 </ul>
-<p>More infomation on this package can be found <a href="https://www.rdocumentation.org/packages/panelr/versions/0.7.2/topics/widen_panel">here</a></p>
+<p>More information on this package can be found <a href="https://www.rdocumentation.org/packages/panelr/versions/0.7.2/topics/widen_panel">here</a></p>
 <pre class="r"><code>data_wide4_new &lt;- data_long4%&gt;%
   widen_panel(
   separator = &quot;_&quot;,
@@ -561,18 +543,18 @@ data_long3</code></pre>
 
 data_wide4_new</code></pre>
 <pre><code>## # A tibble: 10 x 7
-##    Plot_Number Height_1 Pests_1 Height_2 Pests_2 Height_3 Pests_3
-##    &lt;fct&gt;          &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;
-##  1 1                 20      11       21      17       22       2
-##  2 2                  5       4       10      16       15      15
-##  3 3                  5       6        9      12       17       9
-##  4 4                 10      12       11       7       16       2
-##  5 5                 13      13       15      11       21       9
-##  6 6                 10       2       18       7       25       7
-##  7 7                 18       9       25      11       27       3
-##  8 8                 12       9       15       1       17       2
-##  9 9                 10      14       18       8       26      18
-## 10 10                14      20       15      14       23      12</code></pre>
+##    Plot_ID Height_1 Pests_1 Height_2 Pests_2 Height_3 Pests_3
+##    &lt;fct&gt;      &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;
+##  1 1             11       8       18      16       20      11
+##  2 2             14       4       20      12       27       4
+##  3 3              9       8       10      19       14       6
+##  4 4              8       6       14      16       22       7
+##  5 5             18       1       21       3       25      16
+##  6 6              6       9       12      12       19      10
+##  7 7             18       2       23      11       25      17
+##  8 8             14       2       20       8       23       6
+##  9 9              6       9        9       7       14       6
+## 10 10             8      13       12      10       18      14</code></pre>
 <pre class="r"><code>data_wide5_new &lt;- data_long4%&gt;%
   widen_panel(
   separator = &quot;_&quot;
@@ -580,18 +562,18 @@ data_wide4_new</code></pre>
 
 data_wide5_new</code></pre>
 <pre><code>## # A tibble: 10 x 13
-##    Plot_Number Height_1 Pests_1 Height_1.1 Pests_1.1 Height_2 Pests_2 Height_2.1
-##    &lt;fct&gt;          &lt;int&gt;   &lt;int&gt;      &lt;int&gt;     &lt;int&gt;    &lt;int&gt;   &lt;int&gt;      &lt;int&gt;
-##  1 1                 20      11         20        11       21      17         21
-##  2 2                  5       4          5         4       10      16         10
-##  3 3                  5       6          5         6        9      12          9
-##  4 4                 10      12         10        12       11       7         11
-##  5 5                 13      13         13        13       15      11         15
-##  6 6                 10       2         10         2       18       7         18
-##  7 7                 18       9         18         9       25      11         25
-##  8 8                 12       9         12         9       15       1         15
-##  9 9                 10      14         10        14       18       8         18
-## 10 10                14      20         14        20       15      14         15
+##    Plot_ID Height_1 Pests_1 Height_1.1 Pests_1.1 Height_2 Pests_2 Height_2.1
+##    &lt;fct&gt;      &lt;int&gt;   &lt;int&gt;      &lt;int&gt;     &lt;int&gt;    &lt;int&gt;   &lt;int&gt;      &lt;int&gt;
+##  1 1             11       8         11         8       18      16         18
+##  2 2             14       4         14         4       20      12         20
+##  3 3              9       8          9         8       10      19         10
+##  4 4              8       6          8         6       14      16         14
+##  5 5             18       1         18         1       21       3         21
+##  6 6              6       9          6         9       12      12         12
+##  7 7             18       2         18         2       23      11         23
+##  8 8             14       2         14         2       20       8         20
+##  9 9              6       9          6         9        9       7          9
+## 10 10             8      13          8        13       12      10         12
 ## # ... with 5 more variables: Pests_2.1 &lt;int&gt;, Height_3 &lt;int&gt;, Pests_3 &lt;int&gt;,
 ## #   Height_3.1 &lt;int&gt;, Pests_3.1 &lt;int&gt;</code></pre>
 </div>
@@ -599,6 +581,7 @@ data_wide5_new</code></pre>
 <h2>External Links and Resources</h2>
 <p><a href="https://www.youtube.com/watch?v=m9V9MwnM3rs">Long vs Wide Video</a></p>
 <p><a href="https://tidyr.tidyverse.org/">Tidyr package details</a></p>
+<p><a href="https://tidyr.tidyverse.org/articles/pivot.html">Pivot examples</a></p>
 <p><a href="https://panelr.jacob-long.com/">Panelr package details</a></p>
 <p><a href="ttps://r4ds.had.co.nz/tidy-data.html#pivoting">R for Data science - Pivoting</a></p>
 <p><a href="https://www.theanalysisfactor.com/wide-and-long-data/">Analysis factor - Wide vs Long data</a></p>
@@ -613,7 +596,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","boot","broom","bslib","cellranger","cli","colorspace","compiler","crayon","datasets","DBI","dbplyr","digest","dplyr","ellipsis","evaluate","fansi","fastmap","forcats","fs","generics","ggplot2","glue","graphics","grDevices","grid","gtable","haven","highr","hms","htmltools","htmlwidgets","httpuv","httr","jquerylib","jsonlite","jtools","knitr","later","lattice","learnr","lifecycle","lme4","lubridate","magrittr","markdown","MASS","Matrix","methods","mime","minqa","modelr","munsell","nlme","nloptr","pander","panelr","pillar","pkgconfig","promises","purrr","R6","Rcpp","readr","readxl","renv","reprex","rlang","rmarkdown","rprojroot","rstudioapi","rvest","sass","scales","shiny","splines","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","tools","tzdb","utf8","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.4.1","4.0.3","1.3-28","0.7.12","0.3.1","1.1.0","3.1.1","2.0-2","4.0.3","1.5.0","4.0.3","1.1.2","2.1.1","0.6.29","1.0.8","0.3.2","0.15","1.0.2","1.1.0","0.5.1","1.5.2","0.1.2","3.3.5","1.6.1","4.0.3","4.0.3","4.0.3","0.3.0","2.4.3","0.9","1.1.1","0.5.2","1.5.4","1.6.5","1.4.2","0.1.4","1.7.3","2.1.4","1.37","1.3.0","0.20-45","0.10.1","1.0.1","1.1-28","1.8.0","2.0.2","1.1","7.3-55","1.4-0","4.0.3","0.12","1.2.4","0.1.8","0.5.0","3.1-155","2.0.0","0.6.4","0.7.6","1.7.0","2.0.3","1.2.0.1","0.3.4","2.5.1","1.0.8","2.1.2","1.3.1","0.15.2","2.0.1","1.0.1","2.11","2.0.2","0.13","1.0.2","0.4.0","1.1.1","1.7.1","4.0.3","4.0.3","1.7.6","1.4.0","3.1.6","1.2.0","1.1.1","1.3.1","4.0.3","0.2.0","1.2.2","4.0.3","0.3.8","2.4.3","0.29","1.3.3","1.8-4","2.2.2"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","boot","broom","bslib","cellranger","cli","colorspace","compiler","crayon","datasets","DBI","dbplyr","digest","dplyr","ellipsis","evaluate","fansi","fastmap","forcats","fs","generics","ggplot2","glue","graphics","grDevices","grid","gtable","haven","highr","hms","htmltools","htmlwidgets","httpuv","httr","jquerylib","jsonlite","jtools","knitr","later","lattice","learnr","lifecycle","lme4","lubridate","magrittr","markdown","MASS","Matrix","methods","mime","minqa","modelr","munsell","nlme","nloptr","pander","panelr","pillar","pkgconfig","promises","purrr","R6","Rcpp","readr","readxl","renv","reprex","rlang","rmarkdown","rprojroot","rstudioapi","rvest","sass","scales","shiny","splines","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","tools","tzdb","utf8","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.4.1","4.0.3","1.3-28","0.7.12","0.3.1","1.1.0","3.2.0","2.0-3","4.0.3","1.5.0","4.0.3","1.1.2","2.1.1","0.6.29","1.0.8","0.3.2","0.15","1.0.2","1.1.0","0.5.1","1.5.2","0.1.2","3.3.5","1.6.2","4.0.3","4.0.3","4.0.3","0.3.0","2.4.3","0.9","1.1.1","0.5.2","1.5.4","1.6.5","1.4.2","0.1.4","1.8.0","2.1.4","1.37","1.3.0","0.20-45","0.10.1","1.0.1","1.1-28","1.8.0","2.0.2","1.1","7.3-55","1.4-0","4.0.3","0.12","1.2.4","0.1.8","0.5.0","3.1-155","2.0.0","0.6.4","0.7.6","1.7.0","2.0.3","1.2.0.1","0.3.4","2.5.1","1.0.8","2.1.2","1.3.1","0.15.3","2.0.1","1.0.1","2.11","2.0.2","0.13","1.0.2","0.4.0","1.1.1","1.7.1","4.0.3","4.0.3","1.7.6","1.4.0","3.1.6","1.2.0","1.1.2","1.3.1","4.0.3","0.2.0","1.2.2","4.0.3","0.3.8","2.4.3","0.29","1.3.3","1.8-4","2.3.5"]}]}]}
 </script>
 <!--/html_preserve-->
 </div>
