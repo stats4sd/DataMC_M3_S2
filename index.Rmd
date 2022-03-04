@@ -76,25 +76,25 @@ For a quick introduction on the required functions please watch this short video
 
 ## Dataset
 
-For the purposes of this demonstration we are going to use 2 version of the following wide data set.
+For the purposes of this demonstration we are going to use two examples of the following wide data set.
 
 ```{r, echo=FALSE}
 knitr::kable(data_wide1)
 ```
 
-In its first instance we just have recorded the height of a plant in each of our 10 plots. We have recorded this at 3 different time points.
+In this first example we have recorded the height of a plant in each of our 10 plots at three different time points.
 
 ```{r, echo=FALSE}
 knitr::kable(data_wide2)
 ```
 
-In the extended version as well as height we have the number of pests observed at the different time points.
+In this extended example,  we have recorded both height and the number of pests observed at three different time points.
 
-During this tutorial we will be looking at a few different ways to first convert these wide datasets to long, and then we will convert them back.
+During this tutorial we will be looking at a few different ways to first convert these wide datasets to long, and then we will convert them convert them back from long to wide.
 
 ## Wide to Long
 
-Let's start with our first dataset and try transforming this into long dataset rather than wide
+Let's start with our first dataset and try transforming this into long dataset rather than a wide data set.
 
 Tidyr supplies a very useful function for this called `pivot_longer`.
 
@@ -122,11 +122,11 @@ data_long1 <- data_wide1 %>%
 data_long1
 ```
 
-Success, we have a dataset now of 30 rows and 3 columns. One row per time point within a plot.
+Success, we have a dataset now of 30 rows and 3 columns. One row per time point for each plot.
 
 Let's move onto our more complicated example where we have 2 different measures recorded at 3 separate time points.
 
-If we do the same thing again but of course extend our column selection to Pests_3. You can see that what we end up with is certainly in long format but the length is defined by time point and measure. Therefore 2 measures * 3 time points * 10 observations means we have 60 rows. You can see how this could get quite extensive if we were to do this for more and more observations/timepoints/measures. We could get some extraordinarily long datasets.
+Let’s do the same thing again but of course extend our column selection to Pests_3. You can see that what we end up with is certainly in long format but the length is defined by time point and measure. Therefore 2 measures * 3 time points * 10 observations means we have 60 rows. You can see how this could get quite extensive if we were to do this for more and more observations/timepoints/measures. We could get some extraordinarily long datasets.
 
 
 ```{r, exercise = FALSE}
@@ -138,7 +138,7 @@ data_long2 <- data_wide2 %>%
 data_long2
 ```
 
-More of than not, this is probably not what you are looking for in your long data. This is a bit of a quirk of long data in that you can often choose different options for how to lengthen your data. In this example we could choose to define our length based on the measurement, as we have done in this first example, but as our data is longitudinal we could also choose to define this on time point. In other words we have a sort of quasi-multilevel approach as we have measures within timepoints within plots. In cases such as these, it is likely that you would prefer to define your data based on time points while keeping your measurements separate.
+More often than not, this is probably not what you are looking for in your long data. This is a bit of a quirk of long data in that you can often choose different options for how to lengthen your data. In this example we could choose to define our length based on the measurement, as we have done in this first example, but as our data is longitudinal we could also choose to define this on time point. In other words we have a sort of quasi-multilevel approach as we have measures within timepoints within plots. In cases such as these, it is likely that you would prefer to define your data based on time points while keeping your measurements separate.
 
 So the question is, how can we go from the wide data to long based on time point rather than on measurement within timepoints therefore keeping height and pests to their own columns?
 
@@ -186,10 +186,15 @@ This has two mandatory arguments which are similarly the opposite of what you fi
 
 We also have a couple optional arguments
 
-*   `id_cols =`, This argument is used to specify the columns that uniquely identify each observation. By default this will use any column in the data which is not specified in `names_from` or `values_from`. So in the previous example from the last page, when we pivoted to wide it would have taken Plot_ID and Time to be the identifying variables. 
-*   `names_prefix` we use this once again, but this time rather than telling R to remove a prefix existing already in our column names. We are using it to tell R to add this prefix on in front of our values that will be generating our new column names. If we had left his argument out we would have got column names that just say 1, 2 and 3.
+*   `id_cols =`, This argument is used to specify the columns that uniquely identify each observation. By default this will use any column in the data which is not specified in `names_from` or `values_from =`. So in the previous example from the last page, when we pivoted to wide it would have taken Plot_ID and Time to be the identifying variables. 
+*   `names_prefix =` we use this once again, but this time rather than telling R to remove a prefix existing already in our column names. We are using it to tell R to add this prefix on in front of our values that will be generating our new column names. If we had left his argument out we would have got column names that just say 1, 2 and 3.
 
 There are additional optional arguments you may wish to research through the help page [here](https://tidyr.tidyverse.org/reference/pivot_wider.html)
+
+```{r}
+data_long1
+```
+
 
 ```{r}
 data_wide1_new <- data_long1 %>%
@@ -206,6 +211,10 @@ data_wide1_new
 Similarly we can reshape our really long data, the one with 60 rows just using the basic arguments.
 
 ```{r}
+data_long2
+```
+
+```{r}
 data_wide2_new <- data_long2 %>%
   pivot_wider(id_cols = Plot_ID,
               names_from = Time_Measure,
@@ -216,9 +225,13 @@ data_wide2_new <- data_long2 %>%
 data_wide2_new
 ```
 
-Now with our other piece of long data where we had rows defined by time point rather than measure, we need to be a little bit more clever. We can actually pass multiple columns into the `values_from` argument by wrapping them in `c()`. 
+Now with our other piece of long data where we had rows defined by time point rather than measure, we need to be a little bit more clever. We can actually pass multiple columns into the `values_from` argument by wrapping them in `c()`. For those not familiar with `c()` this is used often to combine a list of items into a vector. So we create a list of columns by writing in `c(Height,pass)`. This is a very common function in R.
 
 Note that when we do this, the new column names will always be "the value column name _ the label from the names from column". In this case it will generate those original column names of Height_1, Height_2 etc.
+
+```{r}
+data_long3
+```
 
 ```{r}
 data_wide3_new <- data_long3 %>%
