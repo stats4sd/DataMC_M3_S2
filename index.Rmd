@@ -4,7 +4,7 @@ output:
   learnr::tutorial:
     progressive: true
     allow_skip: true
-    df_print: default
+    df_print: paged
 runtime: shiny_prerendered
 description: >
   Learn about the basics of reshaping your data in R
@@ -79,13 +79,13 @@ For a quick introduction on the required functions please watch this short video
 For the purposes of this demonstration we are going to use two examples of the following wide data set.
 
 ```{r, echo=FALSE}
-knitr::kable(data_wide1)
+data_wide1
 ```
 
 In this first example we have recorded the height of a plant in each of our 10 plots at three different time points.
 
 ```{r, echo=FALSE}
-knitr::kable(data_wide2)
+data_wide2
 ```
 
 In this extended example,  we have recorded both height and the number of pests observed at three different time points.
